@@ -39,9 +39,24 @@ Read more about: https://antfu.me/posts/move-on-to-esm-only
 
 ofetch internally uses ufo and destr, but in practice only utilizes a small portion of ufo.
 
-with pre-compile ufo and destr, we successfully reduced the size from 116KB to approximately 8KB. (including types)
+with pre-compile ufo and destr, we successfully reduced the deps size from 116KB to approximately 8KB. (including types)
 
 Read more about: https://e18e.dev/blog/bundling-dependencies.html
+
+## ✔️ Small, Smaller, Smallest
+
+Now it's time for us to compare with ofetch.
+
+### [ofetch@1.4.1 (916KB)](https://pkg-size.dev/ofetch@1.4.1)
+
+- ofetch: 62KB
+- node-fetch-native: 739KB
+- ufo: 105KB
+- destr: 11KB
+
+### [ooofetch@2.0.0-beta.5 (28KB)](https://pkg-size.dev/ooofetch@2.0.0-beta.5)
+
+- ooofetch: 28KB
 
 ## License
 
