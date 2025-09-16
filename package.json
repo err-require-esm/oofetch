@@ -1,11 +1,12 @@
 {
-  "name": "ofetch",
-  "version": "1.4.1",
-  "description": "A better fetch API. Works on node, browser and workers.",
-  "repository": "unjs/ofetch",
-  "license": "MIT",
-  "sideEffects": false,
+  "name": "oofetch",
   "type": "module",
+  "version": "1.4.1",
+  "packageManager": "pnpm@10.15.0",
+  "description": "A better ofetch.",
+  "license": "MIT",
+  "repository": "err-require-esm/oofetch",
+  "sideEffects": false,
   "exports": {
     "./package.json": "./package.json",
     ".": {
@@ -29,6 +30,7 @@
           "default": "./dist/node.cjs"
         }
       },
+      "types": "./dist/index.d.mts",
       "import": {
         "types": "./dist/index.d.mts",
         "default": "./dist/index.mjs"
@@ -37,7 +39,6 @@
         "types": "./dist/node.d.cts",
         "default": "./dist/node.cjs"
       },
-      "types": "./dist/index.d.mts",
       "default": "./dist/index.mjs"
     },
     "./node": {
@@ -64,8 +65,8 @@
     "dev": "vitest",
     "lint": "eslint . && prettier -c src test playground examples",
     "lint:fix": "eslint --fix . && prettier -w src test playground examples",
-    "prepack": "pnpm build",
     "play": "jiti playground/index.ts",
+    "prepack": "pnpm build",
     "release": "pnpm test && changelogen --release && npm publish && git push --follow-tags",
     "test": "pnpm lint && vitest run --coverage"
   },
@@ -75,11 +76,13 @@
     "ufo": "^1.6.1"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "^5.3.0",
+    "@moeru/eslint-config": "0.1.0-beta.10",
+    "@moeru/tsconfig": "0.1.0-beta.10",
     "@types/node": "^24.3.0",
     "@vitest/coverage-v8": "^3.2.4",
     "changelogen": "^0.6.2",
     "eslint": "^9.34.0",
-    "eslint-config-unjs": "^0.5.0",
     "fetch-blob": "^4.0.0",
     "formdata-polyfill": "^4.0.10",
     "h3": "^1.15.4",
@@ -91,6 +94,5 @@
     "unbuild": "^3.6.1",
     "undici": "^7.15.0",
     "vitest": "^3.2.4"
-  },
-  "packageManager": "pnpm@10.15.0"
+  }
 }
