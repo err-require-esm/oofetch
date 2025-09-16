@@ -4,10 +4,12 @@ export * from './base'
 
 export type * from './types'
 
+export const fetch = async (...args: Parameters<typeof globalThis.fetch>) => globalThis.fetch(...args)
+
 export const ofetch = createFetch({
-  AbortController: globalThis.AbortController,
-  fetch: globalThis.fetch,
-  Headers: globalThis.Headers,
+  AbortController,
+  fetch,
+  Headers,
 })
 
 export const $fetch = ofetch
