@@ -30,8 +30,7 @@
     "test": "pnpm lint && vitest run --coverage"
   },
   "dependencies": {
-    "destr": "^2.0.5",
-    "ufo": "^1.6.1"
+    "destr": "^2.0.5"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^5.3.0",
@@ -46,6 +45,7 @@
     "listhen": "^1.9.0",
     "pkgroll": "^2.15.4",
     "typescript": "^5.9.2",
+    "ufo": "^1.6.1",
     "undici": "^7.15.0",
     "vitest": "^3.2.4"
   }
