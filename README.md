@@ -35,6 +35,14 @@ Since I'm already using ESM, why bother downloading extra code I'll never use?
 
 Read more about: https://antfu.me/posts/move-on-to-esm-only
 
+## ✔️ Pre-compile dependencies
+
+ofetch internally uses ufo and destr, but in practice only utilizes a small portion of ufo.
+
+with pre-compile ufo and destr, we successfully reduced the size from 116KB to approximately 8KB. (including types)
+
+Read more about: https://e18e.dev/blog/bundling-dependencies.html
+
 ## License
 
 MIT. Made with 💖
