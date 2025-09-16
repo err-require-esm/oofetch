@@ -10,7 +10,6 @@ import {
 } from 'h3'
 import { listen } from 'listhen'
 import { Readable } from 'node:stream'
-import { nodeMajorVersion } from 'std-env'
 import { getQuery, joinURL } from 'ufo'
 import {
   afterAll,
@@ -211,7 +210,7 @@ describe('ofetch', () => {
     expect(body).to.deep.eq(message)
   })
 
-  it.skipIf(Number(nodeMajorVersion) < 18)(
+  it(
     'handle ReadableStream body',
     async () => {
       const message = 'Hallo von Pascal'
