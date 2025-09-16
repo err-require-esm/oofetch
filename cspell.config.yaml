@@ -9,6 +9,8 @@ words:
   - moeru
   - ofetch
   - oofetch
+  - pkgroll
   - sonarjs
+  - unjs
 ignoreWords: []
 import: []
