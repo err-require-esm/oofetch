@@ -1,168 +1,169 @@
+/* eslint-disable sonarjs/class-name */
 // --------------------------
 // $fetch API
 // --------------------------
 
 export interface $Fetch {
-  <T = any, R extends ResponseType = "json">(
+  <T = any, R extends ResponseType = 'json'>(
     request: FetchRequest,
     options?: FetchOptions<R>
-  ): Promise<MappedResponseType<R, T>>;
-  raw<T = any, R extends ResponseType = "json">(
+  ): Promise<MappedResponseType<R, T>>
+  create: (defaults: FetchOptions, globalOptions?: CreateFetchOptions) => $Fetch
+  native: Fetch
+  raw: <T = any, R extends ResponseType = 'json'>(
     request: FetchRequest,
     options?: FetchOptions<R>
-  ): Promise<FetchResponse<MappedResponseType<R, T>>>;
-  native: Fetch;
-  create(defaults: FetchOptions, globalOptions?: CreateFetchOptions): $Fetch;
+  ) => Promise<FetchResponse<MappedResponseType<R, T>>>
 }
 
 // --------------------------
 // Options
 // --------------------------
 
+export interface CreateFetchOptions {
+  AbortController?: typeof AbortController
+  defaults?: FetchOptions
+  fetch?: Fetch
+  Headers?: typeof Headers
+}
+
+export type Fetch = typeof globalThis.fetch
+
+export interface FetchContext<T = any, R extends ResponseType = ResponseType> {
+  error?: Error
+  options: ResolvedFetchOptions<R>
+  request: FetchRequest
+  response?: FetchResponse<T>
+}
+
+export type FetchHook<C extends FetchContext = FetchContext> = (
+  context: C
+) => MaybePromise<void>
+
+// --------------------------
+// Hooks and Context
+// --------------------------
+
+export interface FetchHooks<T = any, R extends ResponseType = ResponseType> {
+  onRequest?: MaybeArray<FetchHook<FetchContext<T, R>>>
+  onRequestError?: MaybeArray<FetchHook<FetchContext<T, R> & { error: Error }>>
+  onResponse?: MaybeArray<
+    FetchHook<FetchContext<T, R> & { response: FetchResponse<T> }>
+  >
+  onResponseError?: MaybeArray<
+    FetchHook<FetchContext<T, R> & { response: FetchResponse<T> }>
+  >
+}
+
 export interface FetchOptions<R extends ResponseType = ResponseType, T = any>
-  extends Omit<RequestInit, "body">,
-    FetchHooks<T, R> {
-  baseURL?: string;
-
-  body?: RequestInit["body"] | Record<string, any>;
-
-  ignoreResponseError?: boolean;
-
+  extends FetchHooks<T, R>,
+  Omit<RequestInit, 'body'> {
   /**
-   * @deprecated use query instead.
+   * Only supported older Node.js versions using node-fetch-native polyfill.
    */
-  params?: Record<string, any>;
+  agent?: unknown
 
-  query?: Record<string, any>;
+  baseURL?: string
 
-  parseResponse?: (responseText: string) => any;
-
-  responseType?: R;
-
-  /**
-   * @experimental Set to "half" to enable duplex streaming.
-   * Will be automatically set to "half" when using a ReadableStream as body.
-   * @see https://fetch.spec.whatwg.org/#enumdef-requestduplex
-   */
-  duplex?: "half" | undefined;
+  body?: Record<string, any> | RequestInit['body']
 
   /**
    * Only supported in Node.js >= 18 using undici
    *
    * @see https://undici.nodejs.org/#/docs/api/Dispatcher
    */
-  dispatcher?: InstanceType<typeof import("undici").Dispatcher>;
+  dispatcher?: InstanceType<typeof import('undici').Dispatcher>
 
   /**
-   * Only supported older Node.js versions using node-fetch-native polyfill.
+   * @experimental Set to "half" to enable duplex streaming.
+   * Will be automatically set to "half" when using a ReadableStream as body.
+   * @see https://fetch.spec.whatwg.org/#enumdef-requestduplex
    */
-  agent?: unknown;
+  duplex?: 'half'
 
-  /** timeout in milliseconds */
-  timeout?: number;
+  ignoreResponseError?: boolean
 
-  retry?: number | false;
+  /**
+   * @deprecated use query instead.
+   */
+  params?: Record<string, any>
+
+  parseResponse?: (responseText: string) => unknown
+
+  query?: Record<string, any>
+
+  responseType?: R
+
+  retry?: false | number
 
   /** Delay between retries in milliseconds. */
-  retryDelay?: number | ((context: FetchContext<T, R>) => number);
+  retryDelay?: ((context: FetchContext<T, R>) => number) | number
 
   /** Default is [408, 409, 425, 429, 500, 502, 503, 504] */
-  retryStatusCodes?: number[];
-}
+  retryStatusCodes?: number[]
 
-export interface ResolvedFetchOptions<
-  R extends ResponseType = ResponseType,
-  T = any,
-> extends FetchOptions<R, T> {
-  headers: Headers;
+  /** timeout in milliseconds */
+  timeout?: number
 }
+export type FetchRequest = RequestInfo
 
-export interface CreateFetchOptions {
-  defaults?: FetchOptions;
-  fetch?: Fetch;
-  Headers?: typeof Headers;
-  AbortController?: typeof AbortController;
+export interface FetchResponse<T> extends Response {
+  _data?: T
 }
 
 export type GlobalOptions = Pick<
   FetchOptions,
-  "timeout" | "retry" | "retryDelay"
->;
-
-// --------------------------
-// Hooks and Context
-// --------------------------
-
-export interface FetchContext<T = any, R extends ResponseType = ResponseType> {
-  request: FetchRequest;
-  options: ResolvedFetchOptions<R>;
-  response?: FetchResponse<T>;
-  error?: Error;
-}
-
-type MaybePromise<T> = T | Promise<T>;
-type MaybeArray<T> = T | T[];
-
-export type FetchHook<C extends FetchContext = FetchContext> = (
-  context: C
-) => MaybePromise<void>;
-
-export interface FetchHooks<T = any, R extends ResponseType = ResponseType> {
-  onRequest?: MaybeArray<FetchHook<FetchContext<T, R>>>;
-  onRequestError?: MaybeArray<FetchHook<FetchContext<T, R> & { error: Error }>>;
-  onResponse?: MaybeArray<
-    FetchHook<FetchContext<T, R> & { response: FetchResponse<T> }>
-  >;
-  onResponseError?: MaybeArray<
-    FetchHook<FetchContext<T, R> & { response: FetchResponse<T> }>
-  >;
-}
+  'retry' | 'retryDelay' | 'timeout'
+>
 
 // --------------------------
 // Response Types
 // --------------------------
 
-export interface ResponseMap {
-  blob: Blob;
-  text: string;
-  arrayBuffer: ArrayBuffer;
-  stream: ReadableStream<Uint8Array>;
+export interface IFetchError<T = any> extends Error {
+  data?: T
+  options?: FetchOptions
+  request?: FetchRequest
+  response?: FetchResponse<T>
+  status?: number
+  statusCode?: number
+  statusMessage?: string
+  statusText?: string
 }
-
-export type ResponseType = keyof ResponseMap | "json";
 
 export type MappedResponseType<
   R extends ResponseType,
   JsonType = any,
-> = R extends keyof ResponseMap ? ResponseMap[R] : JsonType;
+> = R extends keyof ResponseMap ? ResponseMap[R] : JsonType
 
-export interface FetchResponse<T> extends Response {
-  _data?: T;
+export interface ResolvedFetchOptions<
+  R extends ResponseType = ResponseType,
+  T = any,
+> extends FetchOptions<R, T> {
+  headers: Headers
+}
+
+export interface ResponseMap {
+  arrayBuffer: ArrayBuffer
+  blob: Blob
+  stream: ReadableStream<Uint8Array>
+  text: string
 }
 
 // --------------------------
 // Error
 // --------------------------
 
-export interface IFetchError<T = any> extends Error {
-  request?: FetchRequest;
-  options?: FetchOptions;
-  response?: FetchResponse<T>;
-  data?: T;
-  status?: number;
-  statusText?: string;
-  statusCode?: number;
-  statusMessage?: string;
-}
+export type ResponseType = 'json' | keyof ResponseMap
 
 // --------------------------
 // Other types
 // --------------------------
 
-export type Fetch = typeof globalThis.fetch;
-
-export type FetchRequest = RequestInfo;
-
 export interface SearchParameters {
-  [key: string]: any;
+  [key: string]: any
 }
+
+type MaybeArray<T> = T | T[]
+
+type MaybePromise<T> = Promise<T> | T

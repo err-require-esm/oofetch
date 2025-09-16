@@ -3,8 +3,11 @@ ignorePaths: []
 dictionaryDefinitions: []
 dictionaries: []
 words:
+  - destr
+  - masknet
   - moeru
   - ofetch
   - oofetch
+  - sonarjs
 ignoreWords: []
 import: []
