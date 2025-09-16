@@ -1,7 +1,8 @@
-import { GLOB_MARKDOWN_CODE } from '@antfu/eslint-config'
+import { GLOB_MARKDOWN_CODE, GLOB_TS } from '@antfu/eslint-config'
 import { defineConfig } from '@moeru/eslint-config'
 
-export default defineConfig({}, {
+export default defineConfig({
+}, {
   rules: {
     'prefer-arrow/prefer-arrow-functions': 'off',
   },
@@ -17,4 +18,16 @@ export default defineConfig({}, {
   rules: {
     'sonarjs/unused-import': 'off',
   },
+}, {
+  files: [GLOB_TS],
+  rules: {
+    'ts/no-unsafe-assignment': 'warn',
+    'ts/no-unsafe-call': 'warn',
+    'ts/no-unsafe-member-access': 'warn',
+    'ts/no-unsafe-return': 'warn',
+  },
+}, {
+  ignores: [
+    '.github',
+  ],
 })

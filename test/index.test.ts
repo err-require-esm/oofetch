@@ -9,6 +9,7 @@ import {
   toNodeListener,
 } from 'h3'
 import { listen } from 'listhen'
+import { Buffer } from 'node:buffer'
 import { Readable } from 'node:stream'
 import { getQuery, joinURL } from 'ufo'
 import {
@@ -37,7 +38,7 @@ describe('ofetch', () => {
       )
       .use(
         '/params',
-        eventHandler(event => getQuery(event.node.req.url || '')),
+        eventHandler(event => getQuery(event.node.req.url ?? '')),
       )
       .use(
         '/url',
@@ -86,6 +87,7 @@ describe('ofetch', () => {
         '/timeout',
         eventHandler(async () => {
           await new Promise((resolve) => {
+            // eslint-disable-next-line @masknet/prefer-timer-id, sonarjs/no-nested-functions
             setTimeout(() => {
               resolve(createError({ status: 408 }))
             }, 1000 * 5)
@@ -96,12 +98,12 @@ describe('ofetch', () => {
     listener = await listen(toNodeListener(app))
   })
 
-  afterAll(() => {
-    listener.close().catch(console.error)
-  })
-
   beforeEach(() => {
     fetch.mockClear()
+  })
+
+  afterAll(() => {
+    listener.close().catch(console.error)
   })
 
   it('ok', async () => {
@@ -329,7 +331,7 @@ describe('ofetch', () => {
     expect(race).to.equal('fast')
   })
 
-  it('abort with retry', () => {
+  it('abort with retry', async () => {
     const controller = new AbortController()
     async function abortHandle() {
       controller.abort()
@@ -338,9 +340,10 @@ describe('ofetch', () => {
         retry: 3,
         signal: controller.signal,
       })
+      // eslint-disable-next-line no-console
       console.log('response', response)
     }
-    expect(abortHandle()).rejects.toThrow(/aborted/)
+    await expect(abortHandle()).rejects.toThrow(/aborted/)
   })
 
   it('passing request obj should return request obj in error', async () => {
@@ -374,7 +377,7 @@ describe('ofetch', () => {
         'The operation was aborted due to timeout',
       )
       expect(error.cause.name).to.equal('TimeoutError')
-      expect(error.cause.code).to.equal(DOMException.TIMEOUT_ERR)
+      expect((error.cause as unknown as { code: number }).code).to.equal(DOMException.TIMEOUT_ERR)
     })
   })
 
@@ -413,7 +416,7 @@ describe('ofetch', () => {
 
     const parseParams = (str: string) =>
       Object.fromEntries(new URLSearchParams(str).entries())
-    expect(parseParams(path)).toMatchObject(parseParams('?b=2&c=3&a=1'))
+    expect(parseParams(path as string)).toMatchObject(parseParams('?b=2&c=3&a=1'))
   })
 
   it('uses request headers', async () => {
