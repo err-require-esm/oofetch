@@ -72,7 +72,7 @@ export interface FetchOptions<R extends ResponseType = ResponseType, T = any>
    *
    * @see https://undici.nodejs.org/#/docs/api/Dispatcher
    */
-  dispatcher?: InstanceType<typeof import('undici').Dispatcher>
+  dispatcher?: unknown
 
   /**
    * @experimental Set to "half" to enable duplex streaming.
