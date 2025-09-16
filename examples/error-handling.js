@@ -1,4 +1,4 @@
-import { ofetch } from 'oofetch'
+import { ofetch } from 'ooofetch'
 
 try {
   await ofetch('https://api.github.com', {

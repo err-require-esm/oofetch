@@ -1,5 +1,5 @@
 import process from 'node:process'
-import { ofetch } from 'oofetch'
+import { ofetch } from 'ooofetch'
 
 const response = await ofetch('https://api.github.com/gists', {
   body: {

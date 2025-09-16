@@ -1,4 +1,4 @@
-import { ofetch } from 'oofetch'
+import { ofetch } from 'ooofetch'
 
 const response = await ofetch('https://api.github.com/markdown', {
   // To provide a body, we need to use the `body` option and just use an object.

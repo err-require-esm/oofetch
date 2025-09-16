@@ -1,4 +1,4 @@
-import { ofetch } from 'oofetch'
+import { ofetch } from 'ooofetch'
 
 interface Repo {
   description: string

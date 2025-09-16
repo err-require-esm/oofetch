@@ -1,4 +1,4 @@
-import { ofetch } from 'oofetch'
+import { ofetch } from 'ooofetch'
 import { Agent } from 'undici'
 
 // Note: This makes fetch unsecure to MITM attacks. USE AT YOUR OWN RISK!
