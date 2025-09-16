@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      destr:
-        specifier: ^2.0.5
-        version: 2.0.5
     devDependencies:
       '@antfu/eslint-config':
         specifier: ^5.3.0
@@ -30,6 +26,9 @@ importers:
       bumpp:
         specifier: ^10.2.3
         version: 10.2.3(magicast@0.3.5)
+      destr:
+        specifier: ^2.0.5
+        version: 2.0.5
       eslint:
         specifier: ^9.34.0
         version: 9.34.0(jiti@2.5.1)
